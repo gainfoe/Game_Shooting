@@ -139,16 +139,19 @@ class Game:
         for bullet in self.bullets.bullet_list:
             for enemy in self.enemies.enemy_list:
                 if bullet[0] - enemy_w <= enemy[0] <= bullet[0] + bullet_w\
-                        and enemy[1] + enemy_h > bullet[1] and enemy[1] <= bullet[1] + bullet_h:
+                        and bullet[1] - enemy_h < enemy[1] <= bullet[1] + bullet_h:
                     self.enemies.enemy_list.remove(enemy)
                     self.bullets.bullet_list.remove(bullet)
                     self.scoreboard.score += 1
                     return True
 
-    def death(self):
+    def death(self, gun):
         for enemy in self.enemies.enemy_list:
             if enemy[1] > height:
                 return True
+            elif gun.x - enemy_w <= enemy[0] <= gun.x + gun_w\
+                        and enemy[1] + enemy_h > gun.y >= enemy[1] - gun_h:
+                    return True
             else:
                 return False
 
@@ -166,7 +169,7 @@ def main():
     flag = False
     while True:
         pos_gun = [0, 0]
-        if game.death():
+        if game.death(gun):
             surface.blit(background, (0, 0))
             for i in range(500):
                 font = pygame.font.Font(None, 100)
